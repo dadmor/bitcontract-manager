@@ -1,6 +1,7 @@
 var componentForm = Vue.extend({
 	template: 
 	`<div>
+		YRS
 		<div class="flex" style="align-items: center;">
 			<div 
 				style="border: 1px solid #607D8B;
@@ -26,6 +27,7 @@ var componentForm = Vue.extend({
 				>Owner: {{me.dataLayer.login}} | {{me.dataLayer.email}}<br>
 				Premission: {{activeAttachment.permission}}</div>
 		</div>
+		
 		<div class="flex">
 			<a 
 				v-for="(item) in me.attachments"
@@ -37,6 +39,9 @@ var componentForm = Vue.extend({
 				href="#empty" 
 				@click="swithAttachment(item)">{{item.name}}</a>
 		</div>
+		<div v-if="check_field_access()" class="message field-message"> 
+					This contract page isn't active now. You wath this page in preview mode. 
+				</div>
 		<fieldset>
 			<div v-for="(field, key, value) in activeAttachment.schema" >
 				<div v-if="field.type === 'string'">
@@ -59,7 +64,8 @@ var componentForm = Vue.extend({
 	},
 	mounted: function () {
 		if( !this.$root.valid_check_attachment_permission(this.me) ){
-			alert('Access locked. Auth as owner');
+
+			this.$root.guardFalseMsg('access_locked');
 			this.$root.app.bodyContent.tpl = 'component-contracts';
 		}
 	},
@@ -67,7 +73,10 @@ var componentForm = Vue.extend({
 		form: function () {
 			let out = {};
 			for (const key in this.me.dataLayer) {
-				out[key] = this.me.dataLayer[key].pop();
+				
+				out[key] = this.me.dataLayer[key][this.me.dataLayer[key].length-1]
+				// this get and remove last
+				// out[key] = this.me.dataLayer[key].pop();
 			}
 			return out;
       	}

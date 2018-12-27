@@ -28,7 +28,7 @@ var componentContracts = Vue.extend({
 						{{item.signs.length}}
 					</span>
 					<span v-if="item.signs.length===0">
-						(blank form)
+						- (blank form)
 					</span>
 					<span v-if="item.signs.length===1">
 						(signed blank form)

@@ -17,7 +17,9 @@
 <script src="components/component-form.js"></script>
 <script src="components/component-contracts.js"></script>
 <script src="components/component-more-info.js"></script>
+<script src="components/component-dialog-message.js"></script>
 
+<script src="mixins/manager.js"></script>
 <script src="mixins/contracts-methods.js"></script>
 <script src="mixins/generators.js"></script>
 
@@ -31,6 +33,10 @@ let App = {
 		</div>	
 		<div :class="['custom-content', 'flex', {'short':app.rightBar.tpl}]">
 			<div class="f20">
+
+				<div v-if="!user.RSA" class="message field-message"> 
+					First, authenticate user! 
+				</div>
 
 				<!-- auth -->
 				<h2>Authentication</h2>
@@ -51,10 +57,6 @@ let App = {
 			</div>
 			<div class="f80">
 
-				<div v-if="!user.RSA" class="message field-message"> 
-					First, authenticate user! 
-				</div>
-
 				<!-- Contracts area -->
 				<component
 					ref="app.bodyContent"
@@ -69,7 +71,7 @@ let App = {
 			<!-- Sidebar HEADER -->
 			<div id="RTA_sidebar_header">
 				<div class="rta_sidebar_header_title">
-					Title <span @click="app.rightBar.tpl=false" style="float:right">X</span>
+					Title <span @click="app.rightBar.tpl=false" class="xclose">X</span>
 				</div>
 				<div class="rta_sidebar_header_subtitle">
 					Subtitle
@@ -86,12 +88,19 @@ let App = {
 			<a href="#">Dont readme</a>
 		</div>
 
-		<div id="dialog" v-if="app.dialog.tpl">
+		<div 
+			id="dialog" 
+			:class="app.dialog.class"
+			v-if="app.dialog.tpl">
+			<span @click="app.dialog.tpl=false" class="xclose">X</span>
+			<h2>Dialog message</h2>
+
 			<component
 					ref="app.dialog"
 					:me="app.dialog.me"
 					:is="app.dialog.tpl"
 				/>
+			<div class="dialog-decorator"></div>
 		</div>
 
 	</div>	
@@ -110,11 +119,12 @@ let App = {
 				},
 				rightBar: {
 					tpl: false,
-					me: null,
+					me: {},
 				},
 				dialog:{
 					tpl: false,
-					me: null,
+					class: [],
+					me: {},
 				}
 			},
 			user:{
@@ -124,21 +134,25 @@ let App = {
 				email: null,
 			},
 			falseMessages:{
-				'not_auth' : 'Please finish authentication',
-				'shema_sign' : 'Contract is active now',
-				'not_active_contract': 'Activate this contact by create first signature',
+				'not_auth' : 'Please finish authentication as user.',
+				'shema_sign' : 'Contract is active now.',
+				'not_active_contract': 'To activate this contact, create owner signature.',
+				'access_locked': 'Access locked. Auth as contract owner.',
 			}
 			
 		}
 	},
-	mixins : [contractMethods, generators],
+	mixins : [manager, contractMethods, generators],
 	methods: {
 
 		/* TODO - change getActiveShemaName to getActiveAttachmentName */
 		getActiveShemaName(_contract){
-			return [..._contract.dataLayer.attachmentShow].pop();
+			return _contract.dataLayer.attachmentShow[_contract.dataLayer.attachmentShow.length - 1]
+			/* this es6 construct remove last  */
+			// return [..._contract.dataLayer.attachmentShow].pop();
 		},
 		getActiveAttachment(_contract){
+			console.log('find in contract', _contract, this.getActiveShemaName(_contract));
 			return _contract.attachments.find(
 				x => x.name === (this.getActiveShemaName(_contract)));
 		},
@@ -153,7 +167,6 @@ let App = {
 					value: _form[key],
 				})
 			}
-
 			/* now run contracts actions (call by key value) */
 			this.getActiveAttachment(_contract).action.calls.forEach(
 				(call) => { 
@@ -168,51 +181,7 @@ let App = {
 					}
 			});
 		},
-		loginUser(_auth){
-			this.user.email = _auth.email;
-			this.user.login = _auth.login;
-
-			this.user.RSA = cryptico.generateRSAKey(
-				SHA256(_auth.password+_auth.login+_auth.email), 1024);
-			this.user.publicKey = cryptico.publicKeyString(this.user.RSA);
-
-			this.app.RSA = cryptico.generateRSAKey(
-				SHA256(_auth.appPassword), 1024);
-			this.app.publicKey = cryptico.publicKeyString(this.app.RSA);
-
-			this.app.bodyContent.tpl = 'component-contracts';
-		},
-		logoutUser(){
-			this.user.email = null;
-			this.user.login = null;
-			this.user.RSA = null;
-			this.user.publicKey = null;
-			this.app.RSA = null;
-			this.app = null;
-		},
-		uploadContract(_data){
-			this.app.bodyContent.me = _data;
-			this.app.bodyContent.me.contractId = this.genSerial(18);
-			this.app.storageContracts.push(this.app.bodyContent.me);
-			this.setStorageContracts();
-		},
-		removeContract(_contract){
-			this.app.storageContracts = this.app.storageContracts.filter(x => x.contractId !== (_contract.contractId));
-			this.setStorageContracts();
-		},
-		moreInfo(_contract){
-			this.app.rightBar = {
-				tpl:'component-more-info',
-				me: _contract,
-			}
-		},
-		openContract(_contract){
-			/* guardians */
-			if(!this.valid_contract_is_active(_contract)) return this.guardFalseMsg('not_active_contract');
-
-			this.$root.app.bodyContent.me = _contract;
-			this.$root.app.bodyContent.tpl = 'component-form';
-		},
+		
 
 		/* signs logic */
 		activateContract(_contract){
@@ -236,7 +205,10 @@ let App = {
 			localStorage.setItem('contracts', JSON.stringify(this.app.storageContracts));
 		},
 		guardFalseMsg(_msg){
-			alert(this.falseMessages[_msg]);
+			this.app.dialog.class = ['warning'];
+			this.app.dialog.tpl = 'component-dialog-message';
+			this.app.dialog.me.body = this.falseMessages[_msg];
+			// alert(this.falseMessages[_msg]);
 			return false;
 		},
 
@@ -248,7 +220,9 @@ let App = {
 			if(_contract.signs.length > 0) return true; 
 		},
 		valid_check_attachment_permission(_contract){
+
 			const _permission = this.getActiveAttachment(_contract).permission;
+
 			if(_permission == "owner"){
 				[first] = _contract.signs;
 				return first.public === this.user.publicKey;
@@ -309,6 +283,7 @@ let AppInstance = new Vue(App);
 /* for unit tests */
 
 	/* attachment name must be unique */ 
+	/* attachmentShow must exist and selected attachment name */ 
 
 /* landing */
 
