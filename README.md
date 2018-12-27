@@ -1,0 +1,1 @@
+# bitcontract-manager
