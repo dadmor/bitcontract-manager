@@ -1,0 +1,339 @@
+<html>
+	<head>
+		<title>BitContracts MANAGER</title>
+	</head>
+
+	<body>
+		<div id="app"></div>
+	</body>
+</html>
+<link rel="stylesheet" type="text/css" href="style.css">
+<script src="libraries/sha256.js"></script>
+<script src="libraries/cryptico.js"></script>
+<script src="libraries/vue.js"></script>
+
+<script src="components/component-auth.js"></script>
+<script src="components/component-uploader.js"></script>
+<script src="components/component-form.js"></script>
+<script src="components/component-contracts.js"></script>
+<script src="components/component-more-info.js"></script>
+
+<script src="mixins/contracts-methods.js"></script>
+<script src="mixins/generators.js"></script>
+
+<script>
+let App = {
+	el: '#app', 
+	template: `
+	<div id="app">
+		<div class="custom-header">
+			<h1>⎌bitContracts MANAGER</h1>
+		</div>	
+		<div :class="['custom-content', 'flex', {'short':app.rightBar.tpl}]">
+			<div class="f20">
+
+				<!-- auth -->
+				<h2>Authentication</h2>
+				<component-auth/>
+				
+				<!-- uploader -->
+				<h2>Load contract from file</h2>
+				<component-uploader :me="{method: 'uploadContract'}"/>
+
+				<!-- uploader -->
+				<h2>Load contract from text</h2>
+				<p>Copy contract code example from email</p>
+				<textarea v-model="import_text"></textarea>
+				<button class="jsdft-button full"
+					@click="uploadContract(JSON.parse(import_text))">
+					Load from text
+				</button>
+			</div>
+			<div class="f80">
+
+				<div v-if="!user.RSA" class="message field-message"> 
+					First, authenticate user! 
+				</div>
+
+				<!-- Contracts area -->
+				<component
+					ref="app.bodyContent"
+					:me="app.bodyContent.me"
+					:is="app.bodyContent.tpl"
+				/>
+			</div>
+		</div>
+
+		<!-- right bar -->
+		<div id="RTA_sidebar" v-if="app.rightBar.tpl">
+			<!-- Sidebar HEADER -->
+			<div id="RTA_sidebar_header">
+				<div class="rta_sidebar_header_title">
+					Title <span @click="app.rightBar.tpl=false" style="float:right">X</span>
+				</div>
+				<div class="rta_sidebar_header_subtitle">
+					Subtitle
+				</div>
+		    </div>
+		    <component
+					ref="app.rightBar"
+					:me="app.rightBar.me"
+					:is="app.rightBar.tpl"
+				/>
+		</div>
+		
+		<div class="custom-footer">
+			<a href="#">Dont readme</a>
+		</div>
+
+		<div id="dialog" v-if="app.dialog.tpl">
+			<component
+					ref="app.dialog"
+					:me="app.dialog.me"
+					:is="app.dialog.tpl"
+				/>
+		</div>
+
+	</div>	
+	`,
+	data () {
+		return {
+			import_text:null,
+			app: {
+				RSA: null,
+				publicKey: null,
+				storageContracts: JSON.parse(
+					localStorage.getItem('contracts')) || [],
+				bodyContent: {
+					tpl: 'component-contracts',
+					me: null,
+				},
+				rightBar: {
+					tpl: false,
+					me: null,
+				},
+				dialog:{
+					tpl: false,
+					me: null,
+				}
+			},
+			user:{
+				RSA: null,
+				publicKey: null,
+				login: null,
+				email: null,
+			},
+			falseMessages:{
+				'not_auth' : 'Please finish authentication',
+				'shema_sign' : 'Contract is active now',
+				'not_active_contract': 'Activate this contact by create first signature',
+			}
+			
+		}
+	},
+	mixins : [contractMethods, generators],
+	methods: {
+
+		/* TODO - change getActiveShemaName to getActiveAttachmentName */
+		getActiveShemaName(_contract){
+			return [..._contract.dataLayer.attachmentShow].pop();
+		},
+		getActiveAttachment(_contract){
+			return _contract.attachments.find(
+				x => x.name === (this.getActiveShemaName(_contract)));
+		},
+		contractAction(_contract, _form){
+			const self = this;
+			
+			/* always update data layer by attachment form data */
+			for (let key in _form) {
+				self['setDataLayer']({
+					contract: _contract,
+					key: key,
+					value: _form[key],
+				})
+			}
+
+			/* now run contracts actions (call by key value) */
+			this.getActiveAttachment(_contract).action.calls.forEach(
+				(call) => { 
+					try {
+						self[call.mainMethod]({ 
+							...call.attrs, 
+							contract: _contract,
+							form: _form,
+						});
+					} catch(err) {
+						alert('contract method:'+call.mainMethod+' isnt exist')
+					}
+			});
+		},
+		loginUser(_auth){
+			this.user.email = _auth.email;
+			this.user.login = _auth.login;
+
+			this.user.RSA = cryptico.generateRSAKey(
+				SHA256(_auth.password+_auth.login+_auth.email), 1024);
+			this.user.publicKey = cryptico.publicKeyString(this.user.RSA);
+
+			this.app.RSA = cryptico.generateRSAKey(
+				SHA256(_auth.appPassword), 1024);
+			this.app.publicKey = cryptico.publicKeyString(this.app.RSA);
+
+			this.app.bodyContent.tpl = 'component-contracts';
+		},
+		logoutUser(){
+			this.user.email = null;
+			this.user.login = null;
+			this.user.RSA = null;
+			this.user.publicKey = null;
+			this.app.RSA = null;
+			this.app = null;
+		},
+		uploadContract(_data){
+			this.app.bodyContent.me = _data;
+			this.app.bodyContent.me.contractId = this.genSerial(18);
+			this.app.storageContracts.push(this.app.bodyContent.me);
+			this.setStorageContracts();
+		},
+		removeContract(_contract){
+			this.app.storageContracts = this.app.storageContracts.filter(x => x.contractId !== (_contract.contractId));
+			this.setStorageContracts();
+		},
+		moreInfo(_contract){
+			this.app.rightBar = {
+				tpl:'component-more-info',
+				me: _contract,
+			}
+		},
+		openContract(_contract){
+			/* guardians */
+			if(!this.valid_contract_is_active(_contract)) return this.guardFalseMsg('not_active_contract');
+
+			this.$root.app.bodyContent.me = _contract;
+			this.$root.app.bodyContent.tpl = 'component-form';
+		},
+
+		/* signs logic */
+		activateContract(_contract){
+			/* guardians */
+			if(!this.valid_user_login()) return this.guardFalseMsg('not_auth');
+			if(_contract.signs.length) return this.guardFalseMsg('shema_sign');
+			/* make initial sign (sign schema) */
+			_contract.signs.push({
+				'public': this.user.publicKey,
+				'encrypt': cryptico.encrypt(
+					JSON.stringify(_contract), 
+					this.user.publicKey, 
+					this.user.RSA).cipher
+			});
+			this.$root.setStorageContracts();
+			alert('The contract has been signed');
+		},
+
+		setStorageContracts(){
+			console.log('storage', this.app.storageContracts);
+			localStorage.setItem('contracts', JSON.stringify(this.app.storageContracts));
+		},
+		guardFalseMsg(_msg){
+			alert(this.falseMessages[_msg]);
+			return false;
+		},
+
+		/* validators - app */
+		valid_user_login(){
+			if(this.user.RSA) return true; 
+		},
+		valid_contract_is_active(_contract){
+			if(_contract.signs.length > 0) return true; 
+		},
+		valid_check_attachment_permission(_contract){
+			const _permission = this.getActiveAttachment(_contract).permission;
+			if(_permission == "owner"){
+				[first] = _contract.signs;
+				return first.public === this.user.publicKey;
+			}
+			if(_permission == "all"){
+				return true;
+			}
+		},
+
+		/* validators - contract */
+
+		/* ## check is I edited My form */
+		valid_schema_owner(_contract){
+
+		}
+
+		/* ## active contract have signed email data and login data */
+		/* ## contract attachment names mustbe unique */
+		/* ## dataLayer objects in values have only arrays types */
+
+	},
+};
+let AppInstance = new Vue(App);
+
+/* confirm reaload page */
+// window.addEventListener('beforeunload', function (e) {
+//   e.preventDefault();
+//   e.returnValue = '';
+// });
+
+</script>
+
+
+
+<pre style="color:#bbb; font-size:10px">
+
+/* RULEZ */
+
+	/* dataLayer represents your public contract data */
+	/* datalayer could be change - !ONLY */
+	/* datalayer values is only arrays */
+	/* arrays accept only incrementations */
+	
+
+
+/* Sign flow */
+
+	/* first step */
+	// first sign contract shema (without data) | owner
+	// sign added data (optional)	| owner
+	// before prepare to send sign by app (last sign) | owner app
+
+	/* next steps */
+	// sign added data | reciver
+	// before prepare to send sign by app (last sign) | reciver app
+
+
+/* for unit tests */
+
+	/* attachment name must be unique */ 
+
+/* landing */
+
+	/* https://synthetic-minds.com */
+
+
+SHA256:
+
+	http://www.webtoolkit.info/javascript_sha256.html#.W_l7zC-Bgy9
+
+RSA:
+
+	https://github.com/wwwtyro/cryptico
+
+tutoriats
+
+	https://medium.com/@mycoralhealth/part-2-networking-code-your-own-blockchain-in-less-than-200-lines-of-go-17fe1dad46e1
+	https://github.com/JTeamDevelop/BTC-Runner
+
+video	
+https://www.readspeaker.com/voice-demo/
+Imagine the simplest way, to realize safe electronic transaction on over the world.
+Discover technology who realize contractsbase, ecosystem, on your company or home.
+
+open gmail
+https://mail.google.com/mail/u/0/?view=cm&tf&to=+dadmor@gmail.com&su=[bitcontract]%20Invitationt&fs=1&body=<a href="">asda</a>ewoJImNvbnRyYWN0TmFtZSI6Ik5ldHdvcmsgcGFzc3Bv
+
+</pre>

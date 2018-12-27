@@ -1,0 +1,110 @@
+{
+	"contractName":"Network passport",
+	"contractId":null,
+	"dataLayer": {
+		"network": [],
+		"login": [],
+		"email": [],
+		"childEmail": [],
+		"parents": [],
+		"childs": [],
+		"attachmentShow":["initNetwork"]
+	},
+	"attachments": [
+		{
+			"name": "initNetwork",
+			"description": "This is empty matrix of network contract. First you should name and create your network and sign it in contract.",
+			"permission":"owner",
+			"schema":{
+				"network":{
+					"type": "string",
+					"title": "Network name"
+				},
+				"login":{
+					"type": "string",
+					"title": "Login"
+				},
+				"email":{
+					"type": "string",
+					"title": "Email"
+				}
+			},
+			"action":{
+				"label": "Activate network contract",
+				"calls":[ 
+					{
+						"mainMethod":"setDataLayer",
+						"attrs":{
+							"key": "attachmentShow", 
+							"value":"sendInvitation"
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "sendInvitation",
+			"permission":"owner",
+			"schema": {
+				"childEmail":{
+					"type": "string",
+					"title": "Email to invite"
+				}
+			},
+			"action":{
+				"label": "Prepare invitation to send",
+				"calls":[ 
+					{
+						"mainMethod":"setDataLayer",
+						"attrs":{
+							"key": "attachmentShow", 
+							"value":"sendAcceptation"
+						}
+					},
+					{
+						"mainMethod":"sign",
+						"attrs":{}
+					},
+					{
+						"mainMethod":"send",
+						"attrs":{}
+					}
+				]
+			}
+		},
+		{
+			"name": "sendAcceptation",
+			"permission":"owner",
+			"schema": {
+				"network":{
+					"type": "string",
+					"title": "Network",
+					"readOnly": true
+				},
+				"email":{
+					"type": "string",
+					"title": "Email",
+					"readOnly": true
+				}
+			},
+			"action":{
+				"label": "Prepare invitation to send",
+				"calls":[ 
+					{
+						"mainMethod":"setDataLayer",
+						"attrs":{
+							"key": "attachmentShow", 
+							"value":"sendInvitation"
+						}
+					},
+					{
+						"mainMethod":"sign",
+						"attrs":{}
+					}
+				]
+			}
+		}
+	],
+	"listTags":["network","childs"], 
+	"signs": []
+}
