@@ -30,6 +30,7 @@ let App = {
 	<div id="app">
 		<div class="custom-header">
 			<h1>⎌bitContracts MANAGER</h1>
+			<div class="sub-custom-header">Create smart economy now!</div>
 		</div>	
 		<div :class="['custom-content', 'flex', {'short':app.rightBar.tpl}]">
 			<div class="f20">
@@ -42,6 +43,16 @@ let App = {
 				<h2>Authentication</h2>
 				<component-auth/>
 				
+				
+			</div>
+			<div class="f80">
+
+				<!-- Contracts area -->
+				<component
+					ref="app.bodyContent"
+					:me="app.bodyContent.me"
+					:is="app.bodyContent.tpl"
+				/>
 				<!-- uploader -->
 				<h2>Load contract from file</h2>
 				<component-uploader :me="{method: 'uploadContract'}"/>
@@ -55,19 +66,13 @@ let App = {
 					Load from text
 				</button>
 			</div>
-			<div class="f80">
-
-				<!-- Contracts area -->
-				<component
-					ref="app.bodyContent"
-					:me="app.bodyContent.me"
-					:is="app.bodyContent.tpl"
-				/>
-			</div>
 		</div>
 
 		<!-- right bar -->
-		<div id="RTA_sidebar" v-if="app.rightBar.tpl">
+		<div 
+			id="RTA_sidebar"
+			:class= 
+			v-if="app.rightBar.tpl">
 			<!-- Sidebar HEADER -->
 			<div id="RTA_sidebar_header">
 				<div class="rta_sidebar_header_title">
@@ -116,10 +121,12 @@ let App = {
 					localStorage.getItem('contracts')) || [],
 				bodyContent: {
 					tpl: 'component-contracts',
+					class: [],
 					me: null,
 				},
 				rightBar: {
 					tpl: false,
+					class: [],
 					me: {},
 				},
 				dialog:{
@@ -152,7 +159,7 @@ let App = {
 			/* this es6 construct remove last  */
 			// return [..._contract.dataLayer.attachmentShow].pop();
 		},
-		getActiveAttachment(_contract){§
+		getActiveAttachment(_contract){
 			return _contract.attachments.find(
 				x => x.name === (this.getActiveShemaName(_contract)));
 		},

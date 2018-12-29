@@ -527,9 +527,13 @@ body{
 .custom-header h1{
 	/*-webkit-text-stroke: 1px #92939b5c;*/
 	font-weight: normal;
-	font-size: 1.8em;
+	font-size: 1.4em;
 	margin: 0.5em 0;
 	text-shadow: 1px 0 1px #afb1be;
+}
+.sub-custom-header{
+	margin-top:-0.8em;
+	letter-spacing: 0.15em;
 }
 .custom-content{
 	min-height: calc(100vh - 120px);
