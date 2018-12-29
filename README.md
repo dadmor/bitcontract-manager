@@ -1,9 +1,11 @@
-# bitcontract-manager
+# BitContract Manager
 
 
 	
 Imagine the simplest way, to realize safe electronic transaction on over the world.
 Discover technology who realize contractsbase, ecosystem, on your company or home.
+
+BitContract Manager is Vue JS implementfaion for BitContract
 
 /* RULEZ */
 
@@ -25,7 +27,7 @@ Discover technology who realize contractsbase, ecosystem, on your company or hom
 	/* attachment name must be unique */ 
 	/* attachmentShow must exist and selected attachment name */ 
 
-/* landing */
+/* good landing to copypaste */
 
 	/* https://synthetic-minds.com */
 
