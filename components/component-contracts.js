@@ -36,7 +36,7 @@ var componentContracts = Vue.extend({
 				</td>
 				<td>
 					<span @click.stop="$root.moreInfo(item)" class="link">
-						more info
+						show data layer
 					</span>
 					<span 
 						v-if="item.signs.length===0" 

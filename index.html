@@ -96,6 +96,7 @@ let App = {
 			<h2>Dialog message</h2>
 
 			<component
+					id="dialog-body"
 					ref="app.dialog"
 					:me="app.dialog.me"
 					:is="app.dialog.tpl"
@@ -151,8 +152,7 @@ let App = {
 			/* this es6 construct remove last  */
 			// return [..._contract.dataLayer.attachmentShow].pop();
 		},
-		getActiveAttachment(_contract){
-			console.log('find in contract', _contract, this.getActiveShemaName(_contract));
+		getActiveAttachment(_contract){§
 			return _contract.attachments.find(
 				x => x.name === (this.getActiveShemaName(_contract)));
 		},
@@ -189,26 +189,20 @@ let App = {
 			if(!this.valid_user_login()) return this.guardFalseMsg('not_auth');
 			if(_contract.signs.length) return this.guardFalseMsg('shema_sign');
 			/* make initial sign (sign schema) */
-			_contract.signs.push({
-				'public': this.user.publicKey,
-				'encrypt': cryptico.encrypt(
-					JSON.stringify(_contract), 
-					this.user.publicKey, 
-					this.user.RSA).cipher
-			});
+			
+			this.sign({contract: _contract})
+
 			this.$root.setStorageContracts();
 			alert('The contract has been signed');
 		},
 
 		setStorageContracts(){
-			console.log('storage', this.app.storageContracts);
 			localStorage.setItem('contracts', JSON.stringify(this.app.storageContracts));
 		},
 		guardFalseMsg(_msg){
 			this.app.dialog.class = ['warning'];
 			this.app.dialog.tpl = 'component-dialog-message';
 			this.app.dialog.me.body = this.falseMessages[_msg];
-			// alert(this.falseMessages[_msg]);
 			return false;
 		},
 
@@ -225,7 +219,7 @@ let App = {
 
 			if(_permission == "owner"){
 				[first] = _contract.signs;
-				return first.public === this.user.publicKey;
+				return this.valid_sign_owner(first.signature);
 			}
 			if(_permission == "all"){
 				return true;
@@ -233,6 +227,13 @@ let App = {
 		},
 
 		/* validators - contract */
+		valid_sign_owner(_sign){
+			if(this.user.RSA && cryptico.decrypt(_sign, this.user.RSA).signature == 'verified'){
+				return true;
+			}else{
+				return false;
+			}
+		},
 
 		/* ## check is I edited My form */
 		valid_schema_owner(_contract){
@@ -257,58 +258,3 @@ let AppInstance = new Vue(App);
 
 
 
-<pre style="color:#bbb; font-size:10px">
-
-/* RULEZ */
-
-	/* dataLayer represents your public contract data */
-	/* datalayer could be change - !ONLY */
-	/* datalayer values is only arrays */
-	/* arrays accept only incrementations */
-	
-
-
-/* Sign flow */
-
-	/* first step */
-	// first sign contract shema (without data) | owner
-	// sign added data (optional)	| owner
-	// before prepare to send sign by app (last sign) | owner app
-
-	/* next steps */
-	// sign added data | reciver
-	// before prepare to send sign by app (last sign) | reciver app
-
-
-/* for unit tests */
-
-	/* attachment name must be unique */ 
-	/* attachmentShow must exist and selected attachment name */ 
-
-/* landing */
-
-	/* https://synthetic-minds.com */
-
-
-SHA256:
-
-	http://www.webtoolkit.info/javascript_sha256.html#.W_l7zC-Bgy9
-
-RSA:
-
-	https://github.com/wwwtyro/cryptico
-
-tutoriats
-
-	https://medium.com/@mycoralhealth/part-2-networking-code-your-own-blockchain-in-less-than-200-lines-of-go-17fe1dad46e1
-	https://github.com/JTeamDevelop/BTC-Runner
-
-video	
-https://www.readspeaker.com/voice-demo/
-Imagine the simplest way, to realize safe electronic transaction on over the world.
-Discover technology who realize contractsbase, ecosystem, on your company or home.
-
-open gmail
-https://mail.google.com/mail/u/0/?view=cm&tf&to=+dadmor@gmail.com&su=[bitcontract]%20Invitationt&fs=1&body=<a href="">asda</a>ewoJImNvbnRyYWN0TmFtZSI6Ik5ldHdvcmsgcGFzc3Bv
-
-</pre>

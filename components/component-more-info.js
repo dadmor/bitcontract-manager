@@ -19,6 +19,33 @@ var componentMoreInfo = Vue.extend({
 			</tr>
 
 		</table>
+
+		<table>
+			<tr>
+				<th>Signs</th>
+				<th></th>
+				<th></th>
+				<th></th>
+			</tr>
+			
+			<tr 
+				v-for="(value) in me.signs"
+				>
+				<td>
+					{{value.owner}}
+				</td>
+				<td>
+					{{value.address}}
+				</td>
+				<td>
+					{{value.dataLayer}}
+				</td>
+				<td>
+					{{value.signature}}
+				</td>
+			</tr>
+
+		</table>
 	</div>`,
 	props: ['me'],
 	data: function(){

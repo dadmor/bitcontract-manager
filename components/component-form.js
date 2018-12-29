@@ -1,7 +1,6 @@
 var componentForm = Vue.extend({
 	template: 
 	`<div>
-		YRS
 		<div class="flex" style="align-items: center;">
 			<div 
 				style="border: 1px solid #607D8B;
@@ -63,6 +62,12 @@ var componentForm = Vue.extend({
 		}
 	},
 	mounted: function () {
+		if( !this.$root.valid_user_login() ){
+			
+			this.$root.guardFalseMsg('not_auth');
+			this.$root.app.bodyContent.tpl = 'component-contracts';
+		}
+
 		if( !this.$root.valid_check_attachment_permission(this.me) ){
 
 			this.$root.guardFalseMsg('access_locked');
