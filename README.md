@@ -22,10 +22,6 @@ BitContract Manager is Vue JS implementfaion for BitContract
 	/* attachment name must be unique */ 
 	/* attachmentShow must exist and selected attachment name */ 
 
-## good landing to copypaste
-
-	/* https://synthetic-minds.com */
-
 ## SHA256:
 
 	http://www.webtoolkit.info/javascript_sha256.html#.W_l7zC-Bgy9
