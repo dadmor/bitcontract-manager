@@ -26,16 +26,16 @@ var componentAuth = Vue.extend({
 		</fieldset>
 
 		<fieldset 
-			class="bg-light-green"
+			class="bg-light-green light-patern"
 			v-if="$root.valid_user_login()">
 			<div>
 				<label>Login: {{$root.user.login}}</label>
 				<label>Email: {{$root.user.email}}</label>
-				<button 
-					class="jsdft-button full" 
+				<a 	style="float:right"
+					href="#empty"
 					@click="$root.logoutUser(); clear()">
 					Logout
-				</button>
+				</a>
 			</div>
 		</div>
 	</div>

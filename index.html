@@ -18,6 +18,7 @@
 <script src="components/component-contracts.js"></script>
 <script src="components/component-more-info.js"></script>
 <script src="components/component-dialog-message.js"></script>
+<script src="components/component-targeter.js"></script>
 
 <script src="mixins/manager.js"></script>
 <script src="mixins/contracts-methods.js"></script>
@@ -28,56 +29,67 @@ let App = {
 	el: '#app', 
 	template: `
 	<div id="app">
-		<div class="custom-header">
-			<h1>⎌bitContracts MANAGER</h1>
-			<div class="sub-custom-header">Create smart economy now!</div>
+		<div class="custom-header" @click="tooglePanels()">
+				<h1>⎌bitContracts MANAGER</h1>
+				<div class="sub-custom-header">Create smart economy now!</div>
 		</div>	
-		<div :class="['custom-content', 'flex', {'short':app.rightBar.tpl}]">
-			<div class="f20">
+		<div id="RTA_board" :class="app.boardCss">
+			<div class="custom-content flex">
+				<div class="f200 menu">
 
-				<div v-if="!user.RSA" class="message field-message"> 
-					First, authenticate user! 
+					<div v-if="!user.RSA" class="message field-message"> 
+						First, authenticate user! 
+					</div>
+
+					<!-- auth -->
+					<h2>Authentication</h2>
+					<component-auth/>
+
+					<!-- menu -->
+					<div class="items">
+						<div
+							:class="['board_menu_item',{'active' : (item.component==app.bodyContent.tpl)}]"
+							v-for="(item, index) in app.boardMenu" 
+							v-on:click="alert()">
+							{{item.label}}
+						</div>
+					</div>
 				</div>
+				<div class="fminus200">
 
-				<!-- auth -->
-				<h2>Authentication</h2>
-				<component-auth/>
-				
-				
-			</div>
-			<div class="f80">
+					<!-- Contracts area -->
+					<component
+						ref="app.bodyContent"
+						:me="app.bodyContent.me"
+						:is="app.bodyContent.tpl"
+					/>
+					<!-- uploader -->
+					<h2>Load contract from file</h2>
+					<component-uploader :me="{method: 'uploadContract'}"/>
 
-				<!-- Contracts area -->
-				<component
-					ref="app.bodyContent"
-					:me="app.bodyContent.me"
-					:is="app.bodyContent.tpl"
-				/>
-				<!-- uploader -->
-				<h2>Load contract from file</h2>
-				<component-uploader :me="{method: 'uploadContract'}"/>
-
-				<!-- uploader -->
-				<h2>Load contract from text</h2>
-				<p>Copy contract code example from email</p>
-				<textarea v-model="import_text"></textarea>
-				<button class="jsdft-button full"
-					@click="uploadContract(JSON.parse(import_text))">
-					Load from text
-				</button>
+					<!-- uploader -->
+					<h2>Load contract from text</h2>
+					<p>Copy contract code example from email</p>
+					<textarea v-model="import_text"></textarea>
+					<button class="jsdft-button full"
+						@click="uploadContract(JSON.parse(import_text))">
+						Load from text
+					</button>
+				</div>
 			</div>
 		</div>
 
 		<!-- right bar -->
 		<div 
-			id="RTA_sidebar"
-			:class= 
+			id="RTA_sidebar" 
 			v-if="app.rightBar.tpl">
 			<!-- Sidebar HEADER -->
 			<div id="RTA_sidebar_header">
-				<div class="rta_sidebar_header_title">
-					Title <span @click="app.rightBar.tpl=false" class="xclose">X</span>
-				</div>
+				<h1>
+					Title <span 
+						@click="app.rightBar.tpl=false; app.boardCss.remove('minus20');" 
+						class="xclose">X</span>
+				</h1>
 				<div class="rta_sidebar_header_subtitle">
 					Subtitle
 				</div>
@@ -109,6 +121,13 @@ let App = {
 			<div class="dialog-decorator"></div>
 		</div>
 
+		<component
+			v-if="app.targeter.tpl"
+			id="targeter"
+			ref="app.targeter"
+			:me="app.targeter.me"
+			:is="app.targeter.tpl"
+		/>
 	</div>	
 	`,
 	data () {
@@ -119,19 +138,36 @@ let App = {
 				publicKey: null,
 				storageContracts: JSON.parse(
 					localStorage.getItem('contracts')) || [],
+				boardCss: ['boxscroll'],
+				boardMenu:[
+					{
+						label:'My Contracts',
+						component: 'component-contracts'
+					},
+					{
+						label:'Contracts Market',
+						component: 'component-contracts-market'
+					},
+					{
+						label:'GTM manager',
+						component: 'component-gtm'
+					}
+				],
 				bodyContent: {
 					tpl: 'component-contracts',
-					class: [],
 					me: null,
 				},
 				rightBar: {
 					tpl: false,
-					class: [],
 					me: {},
 				},
 				dialog:{
 					tpl: false,
 					class: [],
+					me: {},
+				},
+				targeter:{
+					tpl: false,
 					me: {},
 				}
 			},
@@ -245,8 +281,7 @@ let App = {
 		/* ## check is I edited My form */
 		valid_schema_owner(_contract){
 
-		}
-
+		},
 		/* ## active contract have signed email data and login data */
 		/* ## contract attachment names mustbe unique */
 		/* ## dataLayer objects in values have only arrays types */
@@ -261,7 +296,23 @@ let AppInstance = new Vue(App);
 //   e.returnValue = '';
 // });
 
+Array.prototype.remove = function() {
+	var what, a = arguments, L = a.length, ax;
+	while (L && this.length) {
+		what = a[--L];
+		while ((ax = this.indexOf(what)) !== -1) {
+			this.splice(ax, 1);
+		}
+	}
+	return this;
+};
+
 </script>
 
+<div style="margin:0 20%">
+<h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</h4>
 
+<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
 
+<p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?</p>
+</div>
