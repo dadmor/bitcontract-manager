@@ -232,7 +232,7 @@ body{
 .message{
 	border-left:5px solid #edd6a2;
 	padding:1em;
-	background: #ffe6ae;
+	background: #FFF59D;
 }
 
 /* forms */
@@ -614,7 +614,7 @@ body{
 	background-color: #B3E5FC;
 }
 #bc_dialog.warning{
-	background-color: #FFE082;
+	background-color: #FFF59D;
 }
 #bc_dialog .dialog-decorator{
 	position:absolute;

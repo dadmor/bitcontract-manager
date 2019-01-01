@@ -21,7 +21,7 @@ const bC_app_feed = {
 		/* get app main data from storage */
 		chrome.storage.local.get([
 			'app',
-			'user',
+			// 'user',
 			'documents',
 			'variables',
 			], this.initApplication);
@@ -31,9 +31,9 @@ const bC_app_feed = {
 			if(data.app){
 				this.app = data.app;
 			}
-			if(data.user){
-				this.user = data.user;
-			}
+			// if(data.user){
+			// 	this.user = data.user;
+			// }
 			if(data.documents){
 				this.documents = data.documents;
 			}
@@ -49,12 +49,12 @@ const bC_app_feed = {
 			},
 			deep: true
 		},
-		user: {
-			handler(val){
-				chrome.storage.local.set({user: val}, function () {/* success */});
-			},
-			deep: true
-		},
+		// user: {
+		// 	handler(val){
+		// 		chrome.storage.local.set({user: val}, function () {/* success */});
+		// 	},
+		// 	deep: true
+		// },
 		documents: {
 			handler(val){
 				chrome.storage.local.set({documents: val}, function () {/* success */});

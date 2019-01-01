@@ -12,7 +12,7 @@ const appData = {
                         component: 'component-contracts'
                     },
                     {
-                        label:'Contracts Market',
+                        label:'Bigdata stock market',
                         component: 'component-market'
                     },
                     {
