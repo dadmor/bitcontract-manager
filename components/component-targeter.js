@@ -30,15 +30,14 @@ var componentTargeter = Vue.extend({
 		*/
 		clickHandler(event){
 			// console.log(this.getXPath(event.target));
-
-			this.$root.app.dialog.class = ['warning'];
-			this.$root.app.dialog.tpl = 'component-dialog-message';
-			this.$root.app.dialog.me.body = this.cssPath(event.target);
+			this.me.addItem({target:this.cssPath(event.target)});
+			
+			this.$root.tooglePanels();
 
 			document.removeEventListener("mouseover",this.moveHandler, false);
 			document.removeEventListener("mousedown",this.clickHandler, false);
 
-			// this.$root.app.targeter.tpl = null;
+			this.$root.app.targeter.tpl = null;
 			//this.$destroy();
 		},
 		moveHandler(event){

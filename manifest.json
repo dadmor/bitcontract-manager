@@ -15,6 +15,7 @@
 			"libraries/vue.js",
 			"components/component-app.js",
 			"components/component-auth.js",
+			"components/component-items.js",
 			"components/component-uploader.js",
 			"components/component-form.js",
 			"components/component-contracts.js",

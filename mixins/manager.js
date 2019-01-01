@@ -46,14 +46,11 @@ const manager = {
 			this.$root.app.bodyContent.tpl = 'component-form';
 		},
 		tooglePanels(){
-			alert('jo');
 			var index = this.app.boardCss.indexOf('hide');
 			if (index === -1) {
 				this.app.boardCss.push('hide');
-				this.$root.app.targeter.tpl = 'component-targeter';
 			}else{
 				this.app.boardCss.pop('hide');
-				this.$root.app.targeter.tpl = null;
 			}
 		},
 		swichMenu(_item,_target){

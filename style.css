@@ -41,10 +41,13 @@ body{
     height: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
-#app #rta_board form, 
-#app #rta_board fieldset {
+#app form, 
+#app fieldset {
 	border: 0;
 	margin:0;
+}
+#app a{
+	color:#1565C0;
 }
 #app .link{
 	margin:-5px 5px;
@@ -189,7 +192,7 @@ body{
 /* buttons */
 #app .jsdft-button{
 	border:0;
-	background-color: #607D8B;
+	background-color: #1565C0;
 	display:inline-block;
 	color: #eee;
 	padding: 10px;
@@ -206,7 +209,7 @@ body{
 	border-radius: 3px;
 }
 #app .jsdft-button:hover{
-	background-color: #263238;
+	background-color: #0D47A1;
 }
 .jsdft-button.full{
 	display: inline-block;
@@ -328,6 +331,9 @@ body{
 	border-left:1px solid #B0BEC5;
 	border-bottom:0;
 	cursor: initial;
+
+	font-weight: bold;
+    color: #42A5F5;
 }
 
 /* table */
@@ -377,9 +383,7 @@ body{
 #app .light-blue{
 	color: #90CAF9;
 }
-#app .bg-light-green{
-	background-color: #e5f5d2
-}
+
 #app .bgbg900{
 	background-color: #607D8B;
 }
@@ -439,7 +443,7 @@ body{
 }    
 
 #app .bg-light-green{
-	background-color: #DCEDC8;
+	background-color: #E3F2FD
 }
 #app .bg-green{
 	background-color: #85bd43;
@@ -562,6 +566,9 @@ body{
 	margin-right:-1px;
 	background-color: #fff;
 	cursor: initial;
+
+	font-weight: bold;
+    color: #42A5F5;
 }
 #app .custom-content fieldset{
 	border-radius: 0;
@@ -642,9 +649,9 @@ body{
 	z-index: 66666615;
 	position:absolute;
 	/*pointer-events: none;*/
-	transition: top 0.3s, height 0.3s, left 0.3s, width 0.3s;
+	transition: top 0.2s, height 0.2s, left 0.2s, width 0.2s;
 	background-color: rgba(0,0,0,0.3);
-	border:1px dashed #000;
+	border:1px dashed yellow;
 }
 #target-top{
 	left:0;
@@ -662,7 +669,7 @@ body{
 	/* border-top:1px solid #000; */
 }
 #target-left{
-	left:-1px;
+	left:0;
 	top:0;
 	width:0;
 	height:100%;

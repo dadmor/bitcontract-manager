@@ -1,7 +1,7 @@
 var ComponentMarket = Vue.extend({
   template: 
   `<div>
-  	<h2>BitContracts marketplace - coming soon</h2>
+  	<h2>coming soon</h2>
   </div>`,
   props: ['me'],
 })

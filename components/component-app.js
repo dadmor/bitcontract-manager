@@ -3,7 +3,7 @@ var componentApp = Vue.extend({
 	`
 	<div id="app">
 		<div class="custom-header" 
-		@click="$root.tooglePanels(); $root.addToDb()">
+		@click="$root.tooglePanels();">
 				<h1>⎌bigContract MANAGER</h1>
 				<div class="sub-custom-header">Create smart economy now!</div>
 		</div>	
@@ -22,9 +22,12 @@ var componentApp = Vue.extend({
 					<!-- menu -->
 					<div class="items">
 						<div
-							:class="['board_menu_item',{'active' : (item.component==$root.app.bodyContent.tpl)}]"
+							:class="[
+								'board_menu_item',
+								{'active' : (item.component==$root.app.bodyContent.tpl)}]"
 							v-for="(item, index) in $root.app.boardMenu" 
-							v-on:click="$root.app.bodyContent.tpl=item.component">
+							v-on:click="
+								$root.app.bodyContent.tpl=item.component">
 							{{item.label}}
 						</div>
 					</div>
@@ -33,7 +36,7 @@ var componentApp = Vue.extend({
 
 					<!-- Contracts area -->
 					<component
-						ref="$root.app.bodyContent"
+						ref="bodyContent"
 						:me="$root.app.bodyContent.me"
 						:is="$root.app.bodyContent.tpl"
 					/>
@@ -57,7 +60,7 @@ var componentApp = Vue.extend({
 				</div>
 		    </div>
 		    <component
-					ref="$root.app.rightBar"
+					ref="rightBar"
 					:me="$root.app.rightBar.me"
 					:is="$root.app.rightBar.tpl"
 				/>
@@ -76,7 +79,7 @@ var componentApp = Vue.extend({
 
 			<component
 					id="$root.dialog-body"
-					ref="$root.app.dialog"
+					ref="dialog"
 					:me="$root.app.dialog.me"
 					:is="$root.app.dialog.tpl"
 				/>
@@ -86,7 +89,7 @@ var componentApp = Vue.extend({
 		<component
 			v-if="$root.app.targeter.tpl"
 			id="targeter"
-			ref="$root.app.targeter"
+			ref="targeter"
 			:me="$root.app.targeter.me"
 			:is="$root.app.targeter.tpl"
 		/>

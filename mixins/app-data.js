@@ -17,7 +17,15 @@ const appData = {
                     },
                     {
                         label:'GTM manager (job)',
-                        component: 'component-gtm'
+                        component: 'component-gtm',
+                    },
+                    {
+                        label:'onBoard tutorials (job)',
+                        component: 'component-market'
+                    },
+                    {
+                        label:'Automatic tests (job)',
+                        component: 'component-market'
                     }
                 ],
                 bodyContent: {
@@ -35,7 +43,15 @@ const appData = {
                 },
                 targeter:{
                     tpl: false,
-                    me: {},
+                    me: {
+                        parent: null,
+                    },
+                },
+                gtmBody:{
+                    tpl: 'component-items',
+                    me: {
+                        target: null,
+                    },
                 }
             },
             user:{
@@ -50,7 +66,8 @@ const appData = {
                 'not_active_contract': 'To activate this contact, create owner signature.',
                 'access_locked': 'Access locked. Auth as contract owner.',
             },
-            documents:[]
+            documents:[],
+            variables:[]
         }
     },
 };

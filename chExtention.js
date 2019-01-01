@@ -22,6 +22,8 @@ const bC_app_feed = {
 		chrome.storage.local.get([
 			'app',
 			'user',
+			'documents',
+			'variables',
 			], this.initApplication);
 	},
 	methods: {
@@ -31,6 +33,12 @@ const bC_app_feed = {
 			}
 			if(data.user){
 				this.user = data.user;
+			}
+			if(data.documents){
+				this.documents = data.documents;
+			}
+			if(data.variables){
+				this.variables = data.variables;
 			}
 		},
 	},
@@ -44,6 +52,18 @@ const bC_app_feed = {
 		user: {
 			handler(val){
 				chrome.storage.local.set({user: val}, function () {/* success */});
+			},
+			deep: true
+		},
+		documents: {
+			handler(val){
+				chrome.storage.local.set({documents: val}, function () {/* success */});
+			},
+			deep: true
+		},
+		variables: {
+			handler(val){
+				chrome.storage.local.set({variables: val}, function () {/* success */});
 			},
 			deep: true
 		},

@@ -5,19 +5,19 @@ var ComponentGtm = Vue.extend({
 		<div class="flex smoth-patern">
 			<div 
 				v-for="(item, index) in tabs"  
-				@click="$root.swichMenu(item, render.gtmBody)"
+				@click="$root.swichMenu(item, $root.app.gtmBody)"
 				:class="[
 					'tab', 
 					{
-						active: (render.gtmBody.tpl === item.component)
+						active: ($root.app.gtmBody.tpl === item.component)
 					}]">
 				{{item.label}}
 			</div>
 		</div>
 		<component
 			ref="gtmBody"
-			:me="render.gtmBody.me"
-			:is="render.gtmBody.tpl"
+			:me="$root.app.gtmBody.me"
+			:is="$root.app.gtmBody.tpl"
 		/>
 	</div>`,
 	props: ['me'],
@@ -29,16 +29,14 @@ var ComponentGtm = Vue.extend({
 					component: 'component-items',
 				},
 				{
+					label:'Variables',
+					component: 'component-market',
+				},
+				{
 					label:'Import/Export',
 					component: 'component-uploader',
 				},
 			],
-			render:{
-				gtmBody:{
-					me: null,
-					tpl: 'component-items'
-				}
-			}
 		}
 	}
 })
