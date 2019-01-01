@@ -9,7 +9,7 @@ var componentApp = Vue.extend({
 		</div>	
 		<div id="RTA_board" :class="$root.app.boardCss">
 			<div class="custom-content flex">
-				<div class="f200 menu">
+				<div class="f200 bc_board_menu">
 
 					<div v-if="!$root.user.RSA" class="message field-message"> 
 						First, authenticate user! 
@@ -68,7 +68,7 @@ var componentApp = Vue.extend({
 		</div>
 
 		<div 
-			id="dialog" 
+			id="bc_dialog" 
 			:class="$root.app.dialog.class"
 			v-if="$root.app.dialog.tpl">
 			<span @click="$root.app.dialog.tpl=false" class="xclose">X</span>

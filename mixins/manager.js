@@ -56,7 +56,9 @@ const manager = {
 				this.$root.app.targeter.tpl = null;
 			}
 		},
-
+		swichMenu(_item,_target){
+			_target.tpl = _item.component; 
+		},
 		guardFalseMsg(_msg){
 			this.app.dialog.class = ['warning'];
 			this.app.dialog.tpl = 'component-dialog-message';

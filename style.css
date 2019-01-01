@@ -41,7 +41,8 @@ body{
     height: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
-#app form, #app fieldset {
+#app #rta_board form, 
+#app #rta_board fieldset {
 	border: 0;
 	margin:0;
 }
@@ -103,7 +104,7 @@ body{
 	height:100vh;
 	right:0;
 	top:0;
-	z-index: 66666610;
+	z-index: 66666695;
 	display: flex;
 	flex-direction: column;
 	text-align:left;
@@ -183,57 +184,7 @@ body{
 		/* width:calc(100% - 250px); */
 		left: -20vw;
 	}
-	.rta_board_header{
-		display:flex;
-		justify-content: space-between;
-		background-color: #fff;
-	}
-		.rta_board_logo{
-			flex: 0 0 150px;
-			background: #f9f9f9;
-			border-bottom:1px solid #ccc;
-			border-right:1px solid #ccc;
-		}
-		.rta_board_header_title{
-			padding: 14px 20px;
-			font-size: 18px;
-			line-height: 20px;
-			margin: 10px;
-			font-size: 20px;
-			font-weight: 400;
-			text-align: left;
-			flex: 1;
-			text-transform: uppercase;
-			color:#455A64;
-		}
-		.rta_board_header_close{
-			margin: 10px;
-			font-size: 18px;
-			line-height: 20px;
-			cursor:pointer;
-			padding: 14px 20px;
-		}
-	.rta_board_body_wrapper{
-		display:flex;
 
-	}
-		.rta_board_menu{
-			flex: 0 0 150px;
-			height: calc(100vh - 84px);
-			border-right: 1px solid #CFD8DC;
-			background: #f9f9f9;
-			/* left menu fixed */
-			position: fixed;
-    		width: 150px;
-    		height: 100%;
-		}
-			
-	.rta_board_body{
-		padding:27px;
-		width:calc(100% - 150px);
-		/* left menu fixed */
-		margin-left: 150px;
-	}
 
 /* buttons */
 #app .jsdft-button{
@@ -342,6 +293,7 @@ body{
 #app input[type=file]::-webkit-file-upload-button:hover {
     background: #FFFAAA;
 }
+#app .smoth-patern,
 #app input:disabled{
 	background:#fff url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAKElEQVQYV2NkQAOf3n/6z4gsBhLgE+RjhAvCBECKwILIAmBBdAGQIAAJYBPYR3+kBAAAAABJRU5ErkJggg==') repeat;
 }
@@ -350,6 +302,32 @@ body{
 	 background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJ0lEQVQYV2NkQAP////3ZUQWAwswMm6GC8IEQIrAgsgCYEF0AZAgANP9E1CXVxkjAAAAAElFTkSuQmCC
     );
 	 background-repeat: repeat;
+}
+
+/* tabs */
+#app .tab{
+	color:#546E7A;
+	text-align: center;
+	flex:1;
+	padding:1em;
+	border-bottom:1px solid #CFD8DC;
+	margin-top:1em;
+	cursor: pointer;
+}
+#app .tab:hover{
+	border-bottom:2px solid #CFD8DC;
+	margin-bottom:-1px;
+}
+#app .tab.active{
+	background: #fff;
+	border-radius: 2px 2px 0 0;
+    box-shadow: 0 -2px 0px #ECEFF1;
+	
+	border-top: 1px solid #B0BEC5;
+	border-right:1px solid #B0BEC5;
+	border-left:1px solid #B0BEC5;
+	border-bottom:0;
+	cursor: initial;
 }
 
 /* table */
@@ -560,11 +538,11 @@ body{
 .custom-content h2{
 	margin-left:10px;
 }
-.custom-content .menu{
+.custom-content .bc_board_menu{
 	border-right: 1px solid #e0e7ea;
     background: #f9f9f9;
 }
-.custom-content .menu .board_menu_item{
+.custom-content .bc_board_menu .board_menu_item{
 	padding: 0.75em;
 	flex-grow: 1;
 	text-align:center;
@@ -573,14 +551,14 @@ body{
 	background: #fff;
 	border-bottom:1px solid #d6dde0;
 }			
-.custom-content .menu .items{
+.custom-content .bc_board_menu .items{
 	border-top:1px solid #d6dde0;
 	margin-top:-2px;
 }
-.custom-content .menu .board_menu_item:hover{
+.custom-content .bc_board_menu .board_menu_item:hover{
 	background-color: #ECEFF1;
 }
-.custom-content .menu .board_menu_item.active{
+.custom-content .bc_board_menu .board_menu_item.active{
 	margin-right:-1px;
 	background-color: #fff;
 	cursor: initial;
@@ -611,7 +589,7 @@ body{
 }
 
 /* dialog */
-#dialog{
+#bc_dialog{
 	z-index: 66666685;
 	position: fixed;
 	width: 90%;
@@ -623,14 +601,15 @@ body{
 	box-sizing: border-box;
 	outline: 100vh solid rgba(100,100,100,0.5);
 	color:#37474F;
+	font-weight: normal;
 }
-#dialog.info{
+#bc_dialog.info{
 	background-color: #B3E5FC;
 }
-#dialog.warning{
+#bc_dialog.warning{
 	background-color: #FFE082;
 }
-#dialog .dialog-decorator{
+#bc_dialog .dialog-decorator{
 	position:absolute;
 	left:0;
 	top:0;
@@ -638,7 +617,7 @@ body{
 	height:100%;
 	background-color: rgba(0,0,0,0.2);
 }
-#dialog-body{
+#bc_dialog-body{
 	user-select: text;
 }
 .xclose{
