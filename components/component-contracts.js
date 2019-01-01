@@ -51,11 +51,24 @@ var componentContracts = Vue.extend({
 			</tr>
 
 		</table>
+
+		<!-- uploader -->
+		<h2>Load contract from file</h2>
+		<component-uploader :me="{method: 'uploadContract'}"/>
+
+		<!-- uploader -->
+		<h2>Load contract from text</h2>
+		<p>Copy contract code example from email</p>
+		<textarea v-model="import_text"></textarea>
+		<button class="jsdft-button full"
+			@click="$root.uploadContract(JSON.parse(import_text))">
+			Load from text
+		</button>
 	</div>`,
 	props: ['me'],
 	data: function(){
 		return {
-			
+			import_text:null,
 		}
 	},
 	methods: {

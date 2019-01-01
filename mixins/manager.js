@@ -27,11 +27,9 @@ const manager = {
 			this.app.bodyContent.me = _data;
 			this.app.bodyContent.me.contractId = this.genSerial(18);
 			this.app.storageContracts.push(this.app.bodyContent.me);
-			this.setStorageContracts();
 		},
 		removeContract(_contract){
 			this.app.storageContracts = this.app.storageContracts.filter(x => x.contractId !== (_contract.contractId));
-			this.setStorageContracts();
 		},
 		moreInfo(_contract){
 			this.app.boardCss.push('minus20');
@@ -48,6 +46,7 @@ const manager = {
 			this.$root.app.bodyContent.tpl = 'component-form';
 		},
 		tooglePanels(){
+			alert('jo');
 			var index = this.app.boardCss.indexOf('hide');
 			if (index === -1) {
 				this.app.boardCss.push('hide');
@@ -55,6 +54,33 @@ const manager = {
 			}else{
 				this.app.boardCss.pop('hide');
 				this.$root.app.targeter.tpl = null;
+			}
+		},
+
+		guardFalseMsg(_msg){
+			this.app.dialog.class = ['warning'];
+			this.app.dialog.tpl = 'component-dialog-message';
+			this.app.dialog.me.body = this.falseMessages[_msg];
+			return false;
+		},
+
+		/* validators - app */
+		valid_user_login(){
+			if(this.user.RSA) return true; 
+		},
+		valid_contract_is_active(_contract){
+			if(_contract.signs.length > 0) return true; 
+		},
+		valid_check_attachment_permission(_contract){
+
+			const _permission = this.getActiveAttachment(_contract).permission;
+
+			if(_permission == "owner"){
+				[first] = _contract.signs;
+				return this.valid_sign_owner(first.signature);
+			}
+			if(_permission == "all"){
+				return true;
 			}
 		},
     }

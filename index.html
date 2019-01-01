@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>BitContracts MANAGER</title>
+		<title>BeContracts MANAGER</title>
 	</head>
 
 	<body>
@@ -19,18 +19,22 @@
 <script src="components/component-more-info.js"></script>
 <script src="components/component-dialog-message.js"></script>
 <script src="components/component-targeter.js"></script>
+<script src="components/component-market.js"></script>
+<script src="components/component-gtm.js"></script>
 
 <script src="mixins/manager.js"></script>
+<script src="mixins/contracts-api.js"></script>
 <script src="mixins/contracts-methods.js"></script>
 <script src="mixins/generators.js"></script>
+<script src="mixins/indexDB.js"></script>
 
 <script>
 let App = {
 	el: '#app', 
 	template: `
 	<div id="app">
-		<div class="custom-header" @click="tooglePanels()">
-				<h1>⎌bitContracts MANAGER</h1>
+		<div class="custom-header" @click="$root.tooglePanels(); $root.addToDb()">
+				<h1>⎌beContract MANAGER</h1>
 				<div class="sub-custom-header">Create smart economy now!</div>
 		</div>	
 		<div id="RTA_board" :class="app.boardCss">
@@ -50,7 +54,7 @@ let App = {
 						<div
 							:class="['board_menu_item',{'active' : (item.component==app.bodyContent.tpl)}]"
 							v-for="(item, index) in app.boardMenu" 
-							v-on:click="alert()">
+							v-on:click="app.bodyContent.tpl=item.component">
 							{{item.label}}
 						</div>
 					</div>
@@ -63,18 +67,6 @@ let App = {
 						:me="app.bodyContent.me"
 						:is="app.bodyContent.tpl"
 					/>
-					<!-- uploader -->
-					<h2>Load contract from file</h2>
-					<component-uploader :me="{method: 'uploadContract'}"/>
-
-					<!-- uploader -->
-					<h2>Load contract from text</h2>
-					<p>Copy contract code example from email</p>
-					<textarea v-model="import_text"></textarea>
-					<button class="jsdft-button full"
-						@click="uploadContract(JSON.parse(import_text))">
-						Load from text
-					</button>
 				</div>
 			</div>
 		</div>
@@ -132,7 +124,6 @@ let App = {
 	`,
 	data () {
 		return {
-			import_text:null,
 			app: {
 				RSA: null,
 				publicKey: null,
@@ -146,10 +137,10 @@ let App = {
 					},
 					{
 						label:'Contracts Market',
-						component: 'component-contracts-market'
+						component: 'component-market'
 					},
 					{
-						label:'GTM manager',
+						label:'GTM manager (job)',
 						component: 'component-gtm'
 					}
 				],
@@ -182,106 +173,27 @@ let App = {
 				'shema_sign' : 'Contract is active now.',
 				'not_active_contract': 'To activate this contact, create owner signature.',
 				'access_locked': 'Access locked. Auth as contract owner.',
+			},
+			db:{
+				instance:null,
+				request:null,
 			}
 			
 		}
 	},
-	mixins : [manager, contractMethods, generators],
+	mixins : [
+		// indexDB,
+		manager, 
+		contractMethods,
+		contractApi, 
+		generators
+	],
+	
 	methods: {
 
-		/* TODO - change getActiveShemaName to getActiveAttachmentName */
-		getActiveShemaName(_contract){
-			return _contract.dataLayer.attachmentShow[_contract.dataLayer.attachmentShow.length - 1]
-			/* this es6 construct remove last  */
-			// return [..._contract.dataLayer.attachmentShow].pop();
-		},
-		getActiveAttachment(_contract){
-			return _contract.attachments.find(
-				x => x.name === (this.getActiveShemaName(_contract)));
-		},
-		contractAction(_contract, _form){
-			const self = this;
-			
-			/* always update data layer by attachment form data */
-			for (let key in _form) {
-				self['setDataLayer']({
-					contract: _contract,
-					key: key,
-					value: _form[key],
-				})
-			}
-			/* now run contracts actions (call by key value) */
-			this.getActiveAttachment(_contract).action.calls.forEach(
-				(call) => { 
-					try {
-						self[call.mainMethod]({ 
-							...call.attrs, 
-							contract: _contract,
-							form: _form,
-						});
-					} catch(err) {
-						alert('contract method:'+call.mainMethod+' isnt exist')
-					}
-			});
-		},
+		
 		
 
-		/* signs logic */
-		activateContract(_contract){
-			/* guardians */
-			if(!this.valid_user_login()) return this.guardFalseMsg('not_auth');
-			if(_contract.signs.length) return this.guardFalseMsg('shema_sign');
-			/* make initial sign (sign schema) */
-			
-			this.sign({contract: _contract})
-
-			this.$root.setStorageContracts();
-			alert('The contract has been signed');
-		},
-
-		setStorageContracts(){
-			localStorage.setItem('contracts', JSON.stringify(this.app.storageContracts));
-		},
-		guardFalseMsg(_msg){
-			this.app.dialog.class = ['warning'];
-			this.app.dialog.tpl = 'component-dialog-message';
-			this.app.dialog.me.body = this.falseMessages[_msg];
-			return false;
-		},
-
-		/* validators - app */
-		valid_user_login(){
-			if(this.user.RSA) return true; 
-		},
-		valid_contract_is_active(_contract){
-			if(_contract.signs.length > 0) return true; 
-		},
-		valid_check_attachment_permission(_contract){
-
-			const _permission = this.getActiveAttachment(_contract).permission;
-
-			if(_permission == "owner"){
-				[first] = _contract.signs;
-				return this.valid_sign_owner(first.signature);
-			}
-			if(_permission == "all"){
-				return true;
-			}
-		},
-
-		/* validators - contract */
-		valid_sign_owner(_sign){
-			if(this.user.RSA && cryptico.decrypt(_sign, this.user.RSA).signature == 'verified'){
-				return true;
-			}else{
-				return false;
-			}
-		},
-
-		/* ## check is I edited My form */
-		valid_schema_owner(_contract){
-
-		},
 		/* ## active contract have signed email data and login data */
 		/* ## contract attachment names mustbe unique */
 		/* ## dataLayer objects in values have only arrays types */

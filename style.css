@@ -1,7 +1,6 @@
 /* clear */
 body{
-	margin:0;
-	padding:0;
+	margin-top:50px;
 }
 #app, #app input, #app label{
 	font-family: Arial, Helvetica, sans-serif;
@@ -104,7 +103,7 @@ body{
 	height:100vh;
 	right:0;
 	top:0;
-	z-index: 10;
+	z-index: 66666610;
 	display: flex;
 	flex-direction: column;
 	text-align:left;
@@ -171,7 +170,7 @@ body{
 	width:100%;
 	height:calc(100vh - 50px);
 	background-color: #fff;
-	z-index:10;
+	z-index:66666610;
 	top:50px;
 	left:0;
 	box-sizing: border-box;
@@ -363,7 +362,7 @@ body{
 }
 #app table tr.hovered:hover td{
 	background-color: #CFD8DC;
-	z-index:1;
+	z-index:6666661;
 	cursor:pointer;
 }
 #app table th{
@@ -532,14 +531,16 @@ body{
 
 /* custom */
 .custom-header{
+	z-index: 66666680;
 	background-color: #f9f9f9;
     color: #969595;
     padding: 10px;
     position: fixed;
     width: 100%;
-    height: 30px;
+    height: 50px;
     top: 0;
     left: 0;
+    box-sizing: border-box;
 }
 .custom-header h1{
 	/*-webkit-text-stroke: 1px #92939b5c;*/
@@ -611,6 +612,7 @@ body{
 
 /* dialog */
 #dialog{
+	z-index: 66666685;
 	position: fixed;
 	width: 90%;
 	left: 5%;
@@ -620,7 +622,6 @@ body{
 	padding: 2em;
 	box-sizing: border-box;
 	outline: 100vh solid rgba(100,100,100,0.5);
-	z-index: 20;
 	color:#37474F;
 }
 #dialog.info{
@@ -659,7 +660,7 @@ body{
 #target-bottom,
 #target-left,
 #target-right{
-	z-index: 100000;
+	z-index: 66666615;
 	position:absolute;
 	/*pointer-events: none;*/
 	transition: top 0.3s, height 0.3s, left 0.3s, width 0.3s;
@@ -697,7 +698,7 @@ body{
 }
 #target-description{
 	/*transition: top 0.3s, height 0.3s, left 0.3s, width 0.3s, opacity 5s;*/
-	z-index: 100001;
+	z-index: 66666616;
 	position:fixed;
 	background-color: #111;
 	padding:10px;

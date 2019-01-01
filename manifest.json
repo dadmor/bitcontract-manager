@@ -1,0 +1,45 @@
+{
+	"name": "bitContract manager",
+	"short_name": "bC.Man",
+	"version": "0.1",
+	"description": "Create smart economy now!",
+	"content_scripts": [
+	{
+	"run_at": "document_end",
+	"matches": ["<all_urls>"],
+	"css": ["style.css"],
+	"js": [
+			"libraries/my-prototypes.js",
+			"libraries/sha256.js",
+			"libraries/cryptico.js",
+			"libraries/vue.js",
+			"components/component-app.js",
+			"components/component-auth.js",
+			"components/component-uploader.js",
+			"components/component-form.js",
+			"components/component-contracts.js",
+			"components/component-more-info.js",
+			"components/component-dialog-message.js",
+			"components/component-targeter.js",
+			"components/component-market.js",
+			"components/component-gtm.js",
+			"mixins/app-data.js",
+			"mixins/manager.js",
+			"mixins/contracts-api.js",
+			"mixins/contracts-methods.js",
+			"mixins/generators.js",
+			"chExtention.js"
+		]
+	}
+	],
+	"permissions": [
+		"activeTab",
+		"downloads",
+		"notifications",
+		"storage",
+		"tabs", 
+		"<all_urls>"
+	],
+	"manifest_version": 2,
+	"author": "Giorgio Thurtani"
+}

@@ -24,9 +24,22 @@ var componentTargeter = Vue.extend({
 		document.removeEventListener("mousedown",this.clickHandler, false);
   	},
 	methods: {
+		/*
+			css get path examples
+			https://stackoverflow.com/questions/3620116/get-css-path-from-dom-element
+		*/
 		clickHandler(event){
 			// console.log(this.getXPath(event.target));
-			console.log(this.cssPath(event.target));
+
+			this.$root.app.dialog.class = ['warning'];
+			this.$root.app.dialog.tpl = 'component-dialog-message';
+			this.$root.app.dialog.me.body = this.cssPath(event.target);
+
+			document.removeEventListener("mouseover",this.moveHandler, false);
+			document.removeEventListener("mousedown",this.clickHandler, false);
+
+			// this.$root.app.targeter.tpl = null;
+			//this.$destroy();
 		},
 		moveHandler(event){
 			this.setTargeter(event.target);

@@ -11,7 +11,6 @@ const contractMethods = {
 			/* TODO - this code is not strict contrat methosd - its manager helpers */
 			/* back to list with manager */
 			this.$root.app.bodyContent.tpl = 'component-contracts';
-			this.$root.setStorageContracts();
 		},
 
         sign(_attr){
@@ -45,7 +44,6 @@ const contractMethods = {
 			/* TODO - this code is not strict contrat methosd - its manager helpers */
 			/* back to list with manager */
 			this.$root.app.bodyContent.tpl = 'component-contracts';
-			this.$root.setStorageContracts();
 		},
 		send(_attr){
 			alert('now send me');
