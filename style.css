@@ -63,6 +63,10 @@ body{
 #app .flex{
 	display:flex;
 	justify-content: space-between;
+	flex-wrap: wrap;
+}
+#app .flex *{
+	flex: 0 0 100%;
 }
 #app .flex .f20{
 	flex: 0 0 calc(20% - 0.6em);
@@ -94,7 +98,12 @@ body{
 	border-top:1px solid #ece9e9;
 }
 
-
+.bottom-sticky{
+	position: sticky;
+    bottom: 0;
+    padding-bottom:2em;
+    background-color: #fff;
+}
 
 /* --------------------------------- */
 /* carlos santana component */
@@ -214,6 +223,7 @@ body{
 .jsdft-button.full{
 	display: inline-block;
 	width: 100%;
+	flex:0 0 100%;
 }
 #app .jsdft-button.active{
 	background-color: #78909C;
