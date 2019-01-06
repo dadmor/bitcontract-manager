@@ -1,18 +1,35 @@
 var componentItems = Vue.extend({
 	template: 
 	`<div>
-		<table class="firstastitle">
+		<div class="flex">
+			<div class="f30">
+				<h2>All defined events</h2>
+			</div>
+			
+			<div class="f30" style="text-align:right; padding:10px 0 0 0">
+				<a 
+					v-if="!isFormOpen"
+					@click="openForm(true)"
+					class="jsdft-button outline " 
+					href="#empty">Add new event</a>
+				<a 
+					@click="openForm(true)"
+					class="jsdft-button outline " 
+					href="#empty">Play track</a>
+			</div>
+		</div>
+		<table>
 			<tr>
-				<th v-for="(item, key) in items">{{item.label}}</th>
+				<th v-for="(item, key) in itemsSchema">{{item.label}}</th>
 			</tr>
 			<!-- Table body -->
 			<tr 
-				v-for="(item) in $root.documents"
+				v-for="(item) in documents"
 				:class="['hovered']"
 				@click="selectRow(item)"
 				>
 					<!-- Table cells -->
-					<td v-for="(cell, key) in items">
+					<td v-for="(cell, key) in itemsSchema">
 						<span v-if="cell.type==='data'">
 							{{item[key]}}
 						</span>
@@ -22,21 +39,43 @@ var componentItems = Vue.extend({
 					</td>
 			</tr>
 		</table>
-		<div class="bottom-sticky">
+		<div 
+			v-if="isFormOpen"
+			class="bottom-sticky">
 			<fieldset>
 				<div class="flex">
 					<div 
-						:class="field.class" 
+						:class="[field.class,'field']" 
 						v-for="(field, key, value) in formSchema" >
+						<!-- input component -->
 						<div 
 							v-if="field.type === 'string'">
 							<label>{{field.title}}</label>
-							<input v-model="items[key].value" />
+							<input v-model="itemsSchema[key].value" />
+						</div>
+						<!-- target component -->
+						<div 
+							v-if="field.type === 'target'">
+							<label>{{field.title}}</label>
+							<div class="flex">
+								<input class="f60" v-model="itemsSchema[key].value" />
+								<a class="jsdft-button outline slim f30" 
+									@click="runTargeter()"
+									href="#empty">SET Target</a>
+							</div>
 						</div>
 					</div>
-					<button class="jsdft-button full"
-						@click="runTargeter()">
+					<button 
+						v-if="!isEditForm"
+						class="jsdft-button full"
+						>
 						Add new event
+					</button>
+					<button
+						v-if="isEditForm" 
+						class="jsdft-button full"
+						@click="editRow()">
+						Edit entry
 					</button>
 				</div>
 			</fieldset>
@@ -45,15 +84,15 @@ var componentItems = Vue.extend({
 	props: ['me'],
 	data: function(){
 		return {
-			items:{
+			itemsSchema:{
 				"domain":{
 					type: 'data',
 					label: 'Domain',
 					value: null
 				},
-				"record":{
+				"collection":{
 					type: 'data',
-					label: 'Record',
+					label: 'Collection',
 					value: null
 				},
 				"tags":{
@@ -79,14 +118,18 @@ var componentItems = Vue.extend({
 				}
 			},
 			formSchema: {
+				"target":{
+					"type": "target",
+					"title": "Target",
+				},
 				"domain":{
 					"type": "string",
 					"title": "Domain",
 					"class" : "f30",
 				},
-				"record":{
+				"collection":{
 					"type": "string",
-					"title": "Record",
+					"title": "Collection name",
 					"class" : "f30",
 				},
 				"tags":{
@@ -94,27 +137,67 @@ var componentItems = Vue.extend({
 					"title": "Tags",
 					"class" : "f30",
 				},
-				"target":{
-					"type": "string",
-					"title": "Target",
-				}
 			},
+			documents: this.$root.documents,
+			documentReference:{},
+
+			isFormOpen: false,
 		}
 	},
 	methods: {
 		selectRow(item){
-			return item
+			this.editForm(true);
+			this.documentReference = item;
+			for (let [k, v] of Object.entries(item)) {
+				this.itemsSchema[k].value = v;
+      			console.log(k,v);
+  			}
 		},
-		runTargeter(){
+		editRow(){
+			for (let [k, v] of Object.entries(this.itemsSchema)) {
+				if(v.type === 'data'){
+					this.$set(this.documentReference, k, v.value);
+					// this.documentReference[k] = v.value;
+				}
+			}
+		},
+		openForm(_bool){
+			console.log('kurwo');
+			this.$root.app.boardCss.push('minus20');
+			Vue.set(this.$root.app, 'rightBar', {
+				tpl:'component-dialog-message',
+				me:{
+					body: '123',
+				},
+			})
+			console.log(this.$root.app);
 
+			this.isFormOpen = _bool;
+			this.isEditForm = false;
+		},
+		editForm(_bool){
+			this.isFormOpen = _bool;
+			this.isEditForm = true;
+		},
+		/* todo - repeir in targeter */
+		addRow(_document){
+			this.$root.documents.push(_document);
+		},
+
+		runTargeter(){
 			// console.log(this);
 			this.$root.tooglePanels();
+			this.$root.app.targeter.me.targeterCallback = this.addRow;
 			this.$root.app.targeter.tpl = 'component-targeter';
-			this.$root.app.targeter.me.addItem = this.addNewDocument;
+			
 		},
-		addNewDocument(_document){
-			this.$root.documents.push(_document);
+
+		/* list operations */
+		uniqueList(key){
+			const unique = [...new Set(this.documents.map(item => item[key]))];
+			console.log(unique);
 		}
+		
 	},
 })
 Vue.component('component-items', componentItems);

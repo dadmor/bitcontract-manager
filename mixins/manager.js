@@ -1,3 +1,4 @@
+/* TODO - profix this methods as MNGR_ */
 const manager = {
     methods : {
         loginUser(_auth){
@@ -43,7 +44,7 @@ const manager = {
 			if(!this.valid_contract_is_active(_contract)) return this.guardFalseMsg('not_active_contract');
 
 			this.$root.app.bodyContent.me = _contract;
-			this.$root.app.bodyContent.tpl = 'component-form';
+			this.$root.app.bodyContent.tpl = 'component-contract-form';
 		},
 		tooglePanels(){
 			var index = this.app.boardCss.indexOf('hide');

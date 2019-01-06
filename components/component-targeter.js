@@ -29,16 +29,20 @@ var componentTargeter = Vue.extend({
 			https://stackoverflow.com/questions/3620116/get-css-path-from-dom-element
 		*/
 		clickHandler(event){
-			// console.log(this.getXPath(event.target));
-			this.me.addItem({target:this.cssPath(event.target)});
+			/* are you sure to add new item yet */
+			console.log(this.me);
+			this.me.targeterCallback(
+				{
+					target:this.cssPath(event.target),
+					domain: window.location.hostname,
+				}
+			);
 			
 			this.$root.tooglePanels();
 
 			document.removeEventListener("mouseover",this.moveHandler, false);
 			document.removeEventListener("mousedown",this.clickHandler, false);
-
 			this.$root.app.targeter.tpl = null;
-			//this.$destroy();
 		},
 		moveHandler(event){
 			this.setTargeter(event.target);

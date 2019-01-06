@@ -44,7 +44,7 @@ const appData = {
                 targeter:{
                     tpl: false,
                     me: {
-                        parent: null,
+                        targeterCallback: null,
                     },
                 },
                 gtmBody:{

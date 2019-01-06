@@ -17,7 +17,7 @@
 			"components/component-auth.js",
 			"components/component-items.js",
 			"components/component-uploader.js",
-			"components/component-form.js",
+			"components/component-contract-form.js",
 			"components/component-contracts.js",
 			"components/component-more-info.js",
 			"components/component-dialog-message.js",

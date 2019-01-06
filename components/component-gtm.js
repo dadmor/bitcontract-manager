@@ -1,7 +1,7 @@
 var ComponentGtm = Vue.extend({
 	template: 
 	`<div>
-		<h2>Google Tag Manager clickable events (contract job plugin)</h2>
+		<h1>Google Tag Manager clickable events (contract job plugin)</h1>
 		<div class="flex smoth-patern">
 			<div 
 				v-for="(item, index) in tabs"  
