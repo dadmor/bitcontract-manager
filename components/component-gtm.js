@@ -2,7 +2,7 @@ var ComponentGtm = Vue.extend({
 	template: 
 	`<div>
 		<h1>Google Tag Manager clickable events (contract job plugin)</h1>
-		<div class="flex smoth-patern">
+		<div class="flex">
 			<div 
 				v-for="(item, index) in tabs"  
 				@click="$root.swichMenu(item, $root.app.gtmBody)"

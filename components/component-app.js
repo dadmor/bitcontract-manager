@@ -4,8 +4,10 @@ var componentApp = Vue.extend({
 	<div id="app">
 		<div class="custom-header" 
 		@click="$root.tooglePanels();">
+			<div class="logotype">
 				<h1>⎌bigContract MANAGER</h1>
 				<div class="sub-custom-header">Create smart economy now!</div>
+			</div>
 		</div>	
 		<div id="RTA_board" :class="$root.app.boardCss">
 			<div class="custom-content flex">
@@ -67,7 +69,7 @@ var componentApp = Vue.extend({
 		</div>
 		
 		<div class="custom-footer">
-			<a href="#">Dont readme</a>
+			<a href="#">Dont readme about fightclub</a>
 		</div>
 
 		<div 

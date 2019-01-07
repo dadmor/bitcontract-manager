@@ -1,4 +1,4 @@
-var componentForm = Vue.extend({
+var componentContractForm = Vue.extend({
 	template: 
 	`<div>
 		<div class="flex" style="align-items: center;">
@@ -105,4 +105,4 @@ var componentForm = Vue.extend({
 		}
 	},
 })
-Vue.component('component-form', componentForm);
+Vue.component('component-contract-form', componentContractForm);

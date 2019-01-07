@@ -26,7 +26,6 @@ var componentAuth = Vue.extend({
 		</fieldset>
 
 		<fieldset 
-			class="bg-light-green light-patern"
 			v-if="$root.valid_user_login()">
 			<div>
 				<label>Login: {{$root.user.login}}</label>

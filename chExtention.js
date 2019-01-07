@@ -8,6 +8,7 @@ const bC_app_feed = {
 	mixins : [
 		appData,
 		manager, 
+		itemsList,
 		contractMethods,
 		contractApi, 
 		generators

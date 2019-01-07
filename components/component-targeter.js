@@ -22,15 +22,13 @@ var componentTargeter = Vue.extend({
 	beforeDestroy: function(){
 		document.removeEventListener("mouseover",this.moveHandler, false);
 		document.removeEventListener("mousedown",this.clickHandler, false);
-  	},
+	},
 	methods: {
 		/*
 			css get path examples
 			https://stackoverflow.com/questions/3620116/get-css-path-from-dom-element
 		*/
 		clickHandler(event){
-			/* are you sure to add new item yet */
-			console.log(this.me);
 			this.me.targeterCallback(
 				{
 					target:this.cssPath(event.target),
