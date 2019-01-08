@@ -2,7 +2,7 @@ var componentItems = Vue.extend({
 	template: 
 	`<div>
 		<div class="flex">
-			<div class="f30" style="padding:10px 0 0 8px">
+			<div class="f30" style="padding:10px 0 0 0">
 				<h2>All defined events</h2>
 			</div>
 			
@@ -34,7 +34,19 @@ var componentItems = Vue.extend({
 			<tr 
 				v-for="(item) in documents"
 				:class="['hovered']"
-				@click="$root.selectRow(item, itemsSchema)"
+				@click="pushMergeItemsSchema(
+						{
+							target: $root.app.rightBar,
+							tpl: 'component-form',
+							me: {
+								formSchema: formSchema,
+								itemsSchema: itemsSchema,
+								callbackData: item,
+							},
+						}
+					)"
+				
+
 				>
 					<!-- Table cells -->
 					<td v-for="(cell, key) in itemsSchema">
@@ -109,13 +121,19 @@ var componentItems = Vue.extend({
 		}
 	},
 	methods: {
-		updateChildItem(_attrs){
-
-		},
 		pushDataToChild(_attrs){
-			console.log(_attrs);
 			_attrs.target.tpl = _attrs.tpl;
 			_attrs.target.me = _attrs.me;
+		},
+		pushMergeItemsSchema(_attrs){
+			for (let [k, v] of Object.entries(_attrs.me.callbackData)) {
+				if(v){
+					_attrs.me.itemsSchema[k].value = v;
+				}
+  			}
+  			_attrs.target.tpl = _attrs.tpl;
+			_attrs.target.me = _attrs.me;
+			
 		}
 	},
 })

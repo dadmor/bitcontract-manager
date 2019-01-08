@@ -242,7 +242,7 @@ body{
 	background-color: rgba(255,255,255,0.4);
 	border:1px solid #1565C0;
 	color:#0D47A1;
-	box-shadow: 0 4px 0px #fff inset
+	box-shadow: 0 4px 0px #fff inset;
 }
 #app .jsdft-button:hover{
 	background-color: #0D47A1;
@@ -258,7 +258,7 @@ body{
 	flex:0 0 100%;
 }
 #app .jsdft-button.slim{
-	line-height:5px;
+	line-height: 8px;
 }
 #app .jsdft-button.active{
 	background-color: #78909C;
@@ -290,7 +290,7 @@ body{
 	color:#eee;
 }
 #app fieldset{
-	padding:1em;
+	padding:15px;
 	box-shadow: none;
 	background-color: #ECEFF1;
 	color:#546E7A;
@@ -338,6 +338,7 @@ body{
 	color:#455A64;
 	background:#fff;
 	box-shadow: initial;
+	line-height: 18px;
 }
 #app input:focus{
 	outline: 0;
@@ -620,7 +621,7 @@ body{
 	height: calc(100vh - 65px);
 }
 .custom-content h2{
-	margin-left:10px;
+	margin-left:15px;
 }
 .custom-content .bc_board_menu{
 	border-right: 1px solid #e0e7ea;
@@ -628,7 +629,7 @@ body{
     border-top: 1px solid rgb(236, 233, 233);
 }
 .custom-content .bc_board_menu .board_menu_item{
-	padding: 10px 15px;
+	padding: 10px 20px;
 	flex-grow: 1;
 	text-align:left;
 	cursor:pointer;
